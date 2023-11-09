@@ -1,6 +1,5 @@
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Encrypter {
@@ -24,6 +23,18 @@ public class Encrypter {
         this.shift = s;
         this.encrypted = "";
     }
+    public static void read(String inputFilePath, String decryptedFilePath){
+        try (Scanner fileScanner = new Scanner(Paths.get(inputFilePath))){
+            while(fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                System.out.println(line);
+            }
+            fileScanner.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+    }
 
     /**
      * Encrypts the content of a file and writes the result to another file.
@@ -34,6 +45,7 @@ public class Encrypter {
      */
     public void encrypt(String inputFilePath, String encryptedFilePath) throws Exception {
         //TODO: Call the read method, encrypt the file contents, and then write to new file
+
     }
 
     /**
@@ -45,6 +57,7 @@ public class Encrypter {
      */
     public void decrypt(String messageFilePath, String decryptedFilePath) throws Exception {
         //TODO: Call the read method, decrypt the file contents, and then write to new file
+        Encrypter.read(messageFilePath, decryptedFilePath);
     }
 
     /**
