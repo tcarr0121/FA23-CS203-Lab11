@@ -41,7 +41,28 @@ public class Encrypter {
         }
         return contentList;
     }
-
+    private char shiftedLetter (char letter) {
+        int val = (int) letter;
+        if (val <= 90 && val >= 65) {
+            int shifted = val + shift;
+            return shifted > 90 ? (char) (64 + shifted - 90) : (char) shifted;
+        } else if (val <= 122 && val >= 97) {
+            int shifted = val + shift;
+            return shifted > 122 ? (char) (96 + shifted - 122) : (char) shifted;
+        } else
+            return letter;
+    }
+    private char decryptingLetters (char letter) {
+        int val = (int) letter;
+        if (val <= 90 && val >= 65) {
+            int shifted = val - shift;
+            return shifted > 90 ? (char) (64 + shifted - 90) : (char) shifted;
+        } else if (val <= 122 && val >= 97) {
+            int shifted = val - shift;
+            return shifted > 122 ? (char) (96 + shifted - 122) : (char) shifted;
+        } else
+            return letter;
+    }
     /**
      * Encrypts the content of a file and writes the result to another file.
      *
@@ -52,34 +73,18 @@ public class Encrypter {
     public void encrypt(String inputFilePath, String outputFilePath) throws Exception {
         //TODO: Call the read method, encrypt the file contents, and then write to new file
         ArrayList<String> encryptingContent = read(inputFilePath);
-        for (String line : encryptingContent){
+        StringBuilder encryptedText = new StringBuilder();
+
+        for (String line : encryptingContent) {
             for (int n = 0; n < line.length(); n++) {
                 char textChar = line.charAt(n);
-                System.out.println(textChar);
-                char encryptedChar = 'a';
-
-                if (textChar >= 65 && textChar <= 90) {
-                    encryptedChar = (char) (textChar + shift);
-                    if(encryptedChar < 65){
-                        encryptedChar = (char) (encryptedChar - 65 + 90);
-                    }
-                    else if (encryptedChar > 90){
-                        encryptedChar = (char) (64 +encryptedChar - 90);
-                    }
-                }
-                if (textChar >= 97 && textChar <= 122) {
-                    encryptedChar = (char) (textChar + shift);
-                    if (encryptedChar < 97){
-                        encryptedChar = (char) (encryptedChar - 97 + 122);
-                    }
-                    else if (encryptedChar > 122){
-                        encryptedChar = (char) (96 + encryptedChar - 122);
-                    }
-                }
-            encrypted += encryptedChar;
+                char encryptedChar = shiftedLetter(textChar);
+                encryptedText.append(encryptedChar);
             }
+            encryptedText.append("\n");
         }
-        writeFile(encrypted, outputFilePath);
+
+        writeFile(encryptedText.toString(), outputFilePath);
     }
 
 
@@ -93,36 +98,18 @@ public class Encrypter {
     public void decrypt(String encryptedFilePath, String decryptedFilePath) throws Exception {
         //TODO: Call the read method, decrypt the file contents, and then write to new file
         ArrayList<String> decryptingContent = read(encryptedFilePath);
-        String decrypted = "";
+        StringBuilder decryptedText = new StringBuilder();
+
         for (String line : decryptingContent) {
             for (int n = 0; n < line.length(); n++) {
                 char textChar = line.charAt(n);
-                System.out.println(textChar);
-                char decipheredChar='a';
-
-                if (textChar >= 65 && textChar <= 90) {
-                    decipheredChar = (char) (textChar - shift);
-                    if(decipheredChar < 65){
-                        decipheredChar = (char) (decipheredChar - 65 + 90);
-                    }
-                    else if (decipheredChar > 90){
-                        decipheredChar= (char) (64 +decipheredChar - 90);
-                    }
-                }
-                if (textChar >= 97 && textChar <= 122) {
-                    decipheredChar = (char) (textChar - shift);
-                    if (decipheredChar < 97){
-                        decipheredChar = (char) (decipheredChar - 97 + 122);
-                    }
-                    else if (decipheredChar > 122){
-                        decipheredChar = (char) (96 + decipheredChar - 122);
-                    }
-                }
-                decrypted += decipheredChar;
+                char decryptedChar = decryptingLetters(textChar);
+                decryptedText.append(decryptedChar);
             }
-            decrypted += "\n";
+            decryptedText.append("\n");
         }
-        writeFile(decrypted, decryptedFilePath);
+
+        writeFile(decryptedText.toString(), decryptedFilePath);
     }
         /**
          * Reads the content of a file and returns it as a string.
